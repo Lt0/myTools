@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+case $1 in
+	-r) echo 3.10.0-229.el7.x86_64;;
+
+	-a) echo 'Linux 172-0-10-95.lightspeed.wlfrct.sbcglobal.net 3.10.0-229.el7.x86_64 #1 SMP Thu Jan 29 18:37:38 EST 2015 x86_64 x86_64 x86_64 GNU/Linux';;
+	
+	*) /usr/bin/uname_org $*
+esac

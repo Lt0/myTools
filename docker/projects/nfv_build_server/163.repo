@@ -1,0 +1,5 @@
+[base]
+name=CentOS-7 - Base - 163.com
+baseurl=http://mirrors.163.com/centos/7/os/x86_64/
+gpgcheck=1
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-7

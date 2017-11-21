@@ -1,0 +1,4 @@
+#PRO_NAME="NFV-FFE"
+#INPUT="/vob/doc_nfv2_lte/casa/nfv/src/ffe /vob/doc_nfv2_lte/casa/nfv/src/include"
+#EXCLUDE="/vob/doc_nfv2_lte/casa/nfv/src/path1 /vob/doc_nfv2_lte/casa/nfv/src/path2"
+#MACRO_EXPANSION=YES

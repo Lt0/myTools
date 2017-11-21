@@ -1,0 +1,4 @@
+To add a crond:
+Example:
+Adding below config to /var/spool/cron/root, the system will running the script /opt/doc/scripts/ci.sh at 4:00 everyday with root accout.
+0 4 * * * date 1>>/var/log/cron-casa-doc.log 2>>/var/log/cron-casa-doc-err.log && /opt/doc/scripts/ci.sh 1>>/var/log/cron-casa-doc.log 2>>/var/log/cron-casa-doc-err.log
