@@ -1,2 +1,2 @@
 # casaTools
-Some tools for casa
+Some personal tools
