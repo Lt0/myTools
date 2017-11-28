@@ -1,0 +1,3 @@
+[alpine]
+        path = /var/www/http/
+        comment = My Alpine Linux Mirror
