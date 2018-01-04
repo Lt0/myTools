@@ -10,8 +10,6 @@ linux
 amd64
 arm64
 
-<br>
-<br>
 # 构建容器
 首先将 syncthing 的安装包(tar.gz) 文件复制到 pkg 目录下，然后执行下面的命令进行构建：
 ```
@@ -20,8 +18,6 @@ arm64
 使用 alpine 作为基本镜像，生成的镜像名为 synchting。
 
 
-<br>
-<br>
 # 使用
 ## 管理界面
 直接通过 web 访问主机的 8384 端口即可。比如说本机 IP 为 192.168.2.3，则在浏览器上访问：
@@ -29,7 +25,6 @@ arm64
 192.168.2.3:8384
 ```
 
-<br>
 ## 容器管理
 ```
 docker stop syncthing
@@ -38,16 +33,13 @@ docker attach syncthing
 ```
 
 
-<br>
 ## 同步文件
 所有同步的文件都在容器内的 /home/vcube 目录下，该目录会映射到物理机的 /syncthing 目录，所以用户要访问 syncthing 同步的文件的话，直接访问 /syncthing 即可。
 
 
-<br>
 ## 日志
 日志保存在容器内的 /var/log/syncthing/ 目录下，其中的 syncthing.log 是标准输出日志，syncthing_err.log 是错误输出日志。
 
 
-<br>
 ## 调试
 syncthing 容器中的 syncthing 应用在后台执行，要调试的话直接 attach 到改容器中即可进入 /bin/sh
