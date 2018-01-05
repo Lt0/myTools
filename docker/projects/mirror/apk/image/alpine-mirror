@@ -8,7 +8,8 @@ fi
 
 
 src=rsync://rsync.alpinelinux.org/alpine/ 
-dest=/var/www/html
+#dest=/var/www/html
+dest=/apk-mirror
 
 # uncomment this to exclude old v2.x branches
 #exclude="--exclude v2.*"
@@ -22,5 +23,5 @@ mkdir -p "$dest"
         --delete-after \
         --delay-updates \
         --timeout=600 \
-        $exclude \
+	--include-from=/root/pickup \
         "$src" "$dest"
