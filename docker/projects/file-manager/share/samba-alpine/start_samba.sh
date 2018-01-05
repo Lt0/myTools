@@ -1,4 +1,4 @@
 #!/bin/sh
 nmbd &
-smbd -F &
+smbd &
 /bin/sh
