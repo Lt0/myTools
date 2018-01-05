@@ -1,4 +1,5 @@
 # 项目文件说明
+```
 project/
 ├── conf -- 保存配置的目录
 │   ├── app.conf -- 容器化的应用配置，用户一般只需要修改这个配置的文件即可
@@ -9,6 +10,7 @@ project/
 │   ├── build-image.sh -- 构建容器的脚本
 │   └── Dockerfile -- 容器的 Dockerfile
 └── README.md -- 项目说明
+```
 
 使用 build-image.sh 来构建项目主要有两个好处：
 1. 不用记比较长的构建命令
