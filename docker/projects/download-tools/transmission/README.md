@@ -1,5 +1,5 @@
 # 概述
-当前目录包含容器化的 transmission，自带 web ui。
+当前目录包含容器化的 transmission，自带 web ui，transmission 版本为 2.92。
 transmission 本身支持 bt 和磁链下载，不支持普通 url 下载。
 
 
@@ -55,7 +55,8 @@ docker attach transmission
 <br>
 
 # 客户端
-tranmission 拥有丰富的客户端，可以通过配置使用指定的服务器作为后端
+tranmission 拥有丰富的客户端，可以通过配置使用指定的服务器作为后端。下面是一些个人用过的客户端，更多客户端查看官网说明：https://transmissionbt.com/resources/
+
 ## web ui
 可以直接通过网页访问，transmission-daemon 自带，界面简陋但实用
 
