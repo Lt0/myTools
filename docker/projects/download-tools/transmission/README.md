@@ -69,7 +69,7 @@ transmission-remote 可以直接从应用商店下载，界面很好，功能非
 ## 命令行
 transmission-cli 是 linux 下的命令行工具，可以在没有界面的环境下使用
 
-## linux GUI
+## 独立应用
 transmission 有多个 linux 环境下的 GUI 前端
-- transgui：功能完善，界面和传统的 linux 前端应用一样丑~
+- transgui：功能完善，界面和传统的 linux 前端应用一样丑~ 支持 window，linux，mac os，参考：https://github.com/transmission-remote-gui/transgui
 - transmission-remote-gtk：使用 gtk 开发的前端，功能完善，界面使用系统自带的 gtk 库，是否好看取决于系统自带的 gtk 版本，ubuntu 16.04 中自带的是 gtk 3.0，看起来效果还不错。
