@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.7
 MAINTAINER lightimehpq@gmail.com
 
 ENV APP_PATH="/opt/syncthing"
