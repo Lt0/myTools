@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.7
 MAINTAINER hepeiqin
 RUN apk update && apk add --no-cache samba
 COPY smb.conf /etc/samba/smb.conf
