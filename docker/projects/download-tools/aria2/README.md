@@ -18,11 +18,13 @@ cd image
 
 
 # 使用
-## 启动容器
-运行前需要指定下载路径，将下面的命令中的 your-download-path 修改为你的下载路径
+## 首次启动
+编辑 conf/app.conf，设置一个目录作为你的下载目录，如果该目录不存在则在首次启动时自动创建
 ```
-docker run --name=aria2 -d -v your-download-path:/download -p 6800:6800 -p 6789:80 -it aria2
+cd ctrl
+./create-container.sh
 ```
+由于路径依赖，必须进入 ctrl 目录下执行该脚本
 
 <br>
 
@@ -60,7 +62,9 @@ web 服务的日志保存在容器内的 /var/log/darkhttpd/darkhttpd.log
 
 # 注意
 - ui 中的配置界面显示的下载路径为 /download，这个是容器内的路径
-- 删除容器会导致配置和当前下载进度全部失效，但只要文件没有删，重新加载下载任务后可以恢复进度并继续下载
+- 添加任务后 3s 内会保存到磁盘，所以如果刚添加完任务在三秒内立即停止容器，可能导致添加任务丢失
+- aria2 的配置文件和 session 文件都保存在设置的下载路径下的 .aria2 目录
+
 
 <br>
 
