@@ -7,5 +7,5 @@ ADD pkg/aria-ng.tar.xz /var/www/html
 #RUN mv /var/www/html/webui-aria2/* /var/www/html/ && rm -rvf /var/www/html/webui-aria2
 COPY run.sh /opt/aria2/
 RUN chmod a+x /opt/aria2/run.sh
-COPY aria2c.conf /etc/
+#COPY aria2c.conf /etc/
 CMD [ "sh", "-c", "/opt/aria2/run.sh" ]
