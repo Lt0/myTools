@@ -17,10 +17,11 @@ cd image
 
 <br>
 
-## 运行容器
-修改 host-download-path 为下载路径
+## 创建容器
+修改 conf/app.conf，配置下载路径，然后进入 ctrl 目录，执行 ctrl 下的 create_container.sh
 ```
-docker run --name=transmission -d -it --restart=always -v host-download-path:/download -p 9091:9091 transmission
+cd ctrl
+./create_container.sh
 ```
 
 <br>
@@ -40,15 +41,20 @@ docker start transmission
   
 docker attach transmission
   -- 进入容器内进行调试
+  
+ docker rm -f transmission
+  -- 删除容器
 ```
 
 <br>
+
+## 自动添加任务
+将 torrent 文件复制到下载路径下的 auto_add 目录，tranmission 会自动添加该任务。
+
 <br>
 
-# 注意
-
-- 删除容器之后所有的配置都会失效
-- 配置界面中的下载路径始终显示为 /download，这个是容器内的路径
+## 注意
+- 配置界面中的下载路径始终显示为 /download，这个是容器内的路径，不要修改，如果要修改下载路径，去修改 conf/app.conf 中的下载路径，然后删除当前容器，重新创建容器。
 
 
 <br>
