@@ -12,4 +12,4 @@ echo CONF_FILE: $CONF_FILE
 [ -d "$CONF_PATH" ] || mkdir -p $CONF_PATH
 [ -f "$CONF_PATH/$CONF_FILE" ] || cp -v ../image/$CONF_FILE $CONF_PATH
 
-docker run --name=$CONTAINER -d -it --restart=always -v /media/nas-2/download/transmission:/download -p 9091:9091 $IMAGE
+docker run --name=$CONTAINER -d -it --restart=always -v $DOWNLOAD_PATH:/download -p 9091:9091 $IMAGE
