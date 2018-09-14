@@ -5,13 +5,12 @@ aria2 本身支持普通 url，磁链和 bt 下载，支持断点续传，通过
 
 测试系统：ubuntu 16.04
 
-测试架构：aarch64
+测试架构：x86_64/aarch64
 
 <br>
 
 # 构建容器
 ```
-cd image
 ./build-image.sh
 ```
 使用 alpine v3.7 作为底包
@@ -21,13 +20,18 @@ cd image
 
 
 # 使用
-## 首次启动
-编辑 conf/app.conf，设置一个目录作为你的下载目录，如果该目录不存在则在首次启动时自动创建
+直接执行 aria2 获取使用说明：
 ```
-cd ctrl
-./create-container.sh
+docker run --rm aria2
 ```
-由于路径依赖，必须进入 ctrl 目录下执行该脚本
+
+一个典型的简单配置启动：
+```
+docker run -d -v /download:/download -p 6800:6800 -p 6789:80 -it aria2 start
+```
+在后台运行，下载文件保存到物理机的 /download 目录，aria2 客户端通过 6800 端口连接服务，也可以直接访问物理机的 6789 端口来访问 web 界面。
+
+更多其它操作参考 aria2 的帮助说明。
 
 <br>
 
