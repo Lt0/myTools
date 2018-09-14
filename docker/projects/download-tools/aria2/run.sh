@@ -45,12 +45,14 @@ echo '
     - access web ui from localhost:6789
 
 2 dump configuration
-  2.1 docker run aria2 dumpconf
+  2.1 docker run --rm aria2 dumpconf
     - dump default aria2 configuration
+    - remove the container after dump configuration
 
 3 help
-  3.1 docker run aria2 -h
+  3.1 docker run --rm aria2 -h
     - show current help, h|-h|--h|help|-help|--help option will show current help info.
+    - remove the container after show help info
 
 
 
