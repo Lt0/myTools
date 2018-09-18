@@ -1,21 +1,13 @@
-# 概述
-给予 alpine 的 samba 服务
+# 概述 
+基于 alpine:3.7 封装的 samba 服务镜像
 
 # 使用
-## 配置 samba
-根据需要修改 smb.conf，配置所需共享的目录和权限
-
-## 构建容器
+执行下面命令查看具体的使用方法: 
 ```
-docker build -t samba .
+docker run --rm samba
 ```
 
-## 运行容器
-```
-docker run --name=samba --restart=always -d -v hostSharePath:containerSharePath -p 139:139 -p 445:445 -it samba
-```
-
-# 管理
+# 日常管理
 ```
 docker stop samba
   -- 停止容器
