@@ -40,9 +40,18 @@ start_service() {
 		touch /run/openrc/softlevel
 	fi
 
-	rc-update add nfs
-	rc-status
-	rc-service nfs start
+	TAG_FILE="/var/run/nfs-start-by-rc"
+	if [ -f "$TAG_FILE" ]; then
+		echo $(date): recover nfs service manually
+		/sbin/rpcbind -w
+		/sbin/rpc.statd --no-notify
+		/usr/sbin/rpc.mountd
+	else
+		echo $(date): start nfs service by rc-service
+		rc-service nfs start
+		touch $TAG_FILE
+	fi
+
 	/bin/sh
 }
 
@@ -57,7 +66,7 @@ case $# in
         * )
                 case $1 in
                         "start" )
-                                echo start nfs service
+                                echo $(date): start nfs service
                                 start_service
                         ;;
                         "dumpconf" )

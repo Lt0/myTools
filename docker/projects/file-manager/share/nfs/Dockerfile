@@ -7,4 +7,6 @@ COPY exports /etc/exports
 COPY run.sh /root/run.sh
 RUN chmod a+x /root/*.sh
 
+RUN rc-update add nfs && rc-status
+
 ENTRYPOINT [ "/root/run.sh" ]
