@@ -1,0 +1,32 @@
+#!/usr/bin/expect
+
+set timeout 5
+
+set local_ip [lindex $argv 0]
+set local_port [lindex $argv 1]
+set pub_ip [lindex $argv 2]
+set pub_port [lindex $argv 3]
+set pub_user [lindex $argv 4]
+set pub_pwd [lindex $argv 5]
+
+proc expose_port { pwd } { 
+  expect {
+    "(yes/no)?" {
+      send "yes\r"
+        exp_continue
+      }   
+  
+    "password:" {
+      send "$pwd"
+      send "\r"
+    }   
+  
+  }
+  
+  interact
+}
+
+while { 1 } { 
+  spawn ssh -R $pub_port:$local_ip:$local_port $pub_ip -l $pub_user
+  expose_port $pub_pwd
+}
