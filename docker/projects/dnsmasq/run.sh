@@ -11,7 +11,7 @@ Usage:
     address=/test.com/172.0.5.75
     address=/test2.com/172.0.5.76
   3. Start DNS server:
-    docker run -d --name=dns --restart=always --net=host -p 53:53 -v $PWD/dnsmasq.d:/etc/dnsmasq.d dns start
+    docker run -d --name=dns --restart=always --net=host -v $PWD/dnsmasq.d:/etc/dnsmasq.d dns start
   
 
 Show help:
@@ -21,7 +21,7 @@ Show help:
 
 
 Start DNS server:
-  docker run -d --name=dns --restart=always --net=host -p 53:53 -v /path/to/dnsmasq.d:/etc/dnsmasq.d dns start
+  docker run -d --name=dns --restart=always --net=host -v /path/to/dnsmasq.d:/etc/dnsmasq.d dns start
 
 
 Check log:
