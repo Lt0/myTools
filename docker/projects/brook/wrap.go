@@ -23,7 +23,7 @@ func main() {
 
 func showHelp() {
 	fmt.Println(`
-brook docker image wraped brook. The brook will be restarted once it exit automatically in container.
+brook docker image wraps brook. The brook will be restarted once it exit automatically in container.
 
 Usage:
   Start a brook server:
