@@ -1,11 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
-	"io"
-	"io/ioutil"
 	"log"
 	"time"
 )
@@ -28,42 +25,17 @@ func main() {
 }
 
 func runCmd(service string, args []string) {
-	fmt.Printf("Start loop service: %v %v\n", service, args)
+	log.Printf("loopservice start loop service: %v %v\n", service, args)
 	cmd := exec.Command(service, args...)
-	stderr, err := cmd.StderrPipe()
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
 	if err != nil {
-		log.Println(err)
+		log.Printf("loopservice run cmd: %v %v failed: %v\n", service, args, err)
 	}
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Println(err)
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		log.Println(err)
-	}
-
-	readOut(stdout, stderr)
-
-	err = cmd.Wait()
-	if err != nil {
-		log.Println(err)
-	}
-
-}
-
-func readOut(stdout, stderr io.ReadCloser) {
-	go readOne(stdout)
-	go readOne(stderr)
-}
-
-func readOne(rc io.ReadCloser) {
-	out, _ := ioutil.ReadAll(rc)
-	fmt.Printf("%s\n", out)
 }
 
 func showHelp() {
-	fmt.Println("loopservice: no service specified")
+	log.Println("loopservice: no service specified")
 }
