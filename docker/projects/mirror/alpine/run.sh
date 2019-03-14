@@ -24,6 +24,9 @@ Usage:
  
       Or start service with web service:
         docker run --name $image --restart=always -v \$PWD/alpine-mirror.conf:/etc/alpine-mirror.conf -d -p 80:80 -it $image start
+
+      Include most option:
+         docker run -d -p 80:80 --name $image --restart=always -v \$PWD/alpine-mirror.conf:/etc/alpine-mirror.conf -v /mirror:/mirror -v /etc/localtime:/etc/localtime:ro -it $image start
      
 
   
