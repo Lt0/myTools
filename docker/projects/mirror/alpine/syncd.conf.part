@@ -1,0 +1,3 @@
+[alpine]
+        path = /mirror
+        comment = My Alpine Linux Mirror
