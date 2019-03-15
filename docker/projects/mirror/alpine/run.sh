@@ -5,25 +5,25 @@ image="alpine-mirror"
 show_help() {
 	echo "
 Usage:
-  Start apk mirror server
+  Start alpine mirror server
     docker run --name $image --restart=always -d -it $image start
 
 
-  start apk mirror server with web service
+  start alpine mirror server with web service
     docker run --name $image --restart=always -p 80:80 -d -it $image start
 
 
-  Start apk mirror server with customized configuration
+  Start alpine mirror server with customized configuration
     step 1: get example configuration
       docker run --rm $image dumpconf > alpine-mirror.conf
 
     step 2: edit alpine-mirror.conf
     
     step 3: start service
-      docker run --name $image --restart=always -v $PWD/alpine-mirror.conf:/etc/alpine-mirror.conf -d -it $image start
+      docker run --name $image --restart=always -v \$PWD/alpine-mirror.conf:/etc/alpine-mirror.conf -d -it $image start
  
       Or start service with web service:
-        docker run --name $image --restart=always -v $PWD/alpine-mirror.conf:/etc/alpine-mirror.conf -d -p 80:80 -it $image start
+        docker run --name $image --restart=always -v \$PWD/alpine-mirror.conf:/etc/alpine-mirror.conf -d -p 80:80 -it $image start
      
 
   

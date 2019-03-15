@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo $0 start at $(date)
+
 # make sure we never run 2 rsync at the same time
 lockfile="/tmp/alpine-mirror.lock"
 if [ -z "$flock" ] ; then
@@ -24,3 +26,5 @@ mkdir -p "$dest"
         --timeout=600 \
 	$exclude \
         "$src" "$dest"
+
+echo $0 finish at $(date)
