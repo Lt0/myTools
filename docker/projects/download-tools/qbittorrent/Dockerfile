@@ -8,6 +8,8 @@ RUN apk update && apk add --no-cache qbittorrent-nox
 
 RUN mkdir -p /qbittorrent /root/.config/qBittorrent/
 COPY qBittorrent.conf /root/.config/qBittorrent/qBittorrent.conf
+RUN mkdir -p /root/.local/share/data/qBittorrent/nova3/engines
+COPY search-plugins/nova3/engines/* /root/.local/share/data/qBittorrent/nova3/engines/
 
 COPY run.sh /
 RUN chmod a+x /run.sh
