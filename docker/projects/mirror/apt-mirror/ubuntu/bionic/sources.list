@@ -1,0 +1,11 @@
+deb http://localhost:8080/ubuntu/ trusty main restricted universe multiverse
+deb http://localhost:8080/ubuntu/ trusty-security main restricted universe multiverse
+deb http://localhost:8080/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://localhost:8080/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://localhost:8080/ubuntu/ trusty-backports main restricted universe multiverse
+
+# deb-src http://localhost:8080/ubuntu/ trusty main restricted universe multiverse
+# deb-src http://localhost:8080/ubuntu/ trusty-security main restricted universe multiverse
+# deb-src http://localhost:8080/ubuntu/ trusty-updates main restricted universe multiverse
+# deb-src http://localhost:8080/ubuntu/ trusty-proposed main restricted universe multiverse
+# deb-src http://localhost:8080/ubuntu/ trusty-backports main restricted universe multiverse
