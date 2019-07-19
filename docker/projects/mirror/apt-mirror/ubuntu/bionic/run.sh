@@ -37,6 +37,9 @@ start_service() {
 	cd $TEST_MIRROR_DIR
 	python3 -m http.server 8080 2>&1 1>/var/log/mirror-test-server.log &
 
+	echo $(date) - start cron daemon
+	/usr/sbin/cron
+
 	cd
 	/bin/bash
 }
