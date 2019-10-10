@@ -8,3 +8,7 @@ WORKDIR /root/theia
 COPY package.json /root/theia/package.json
 RUN yarn 
 RUN yarn theia build
+
+RUN apk add go git
+RUN go get -v github.com/ramya-rao-a/go-outline
+RUN go get -v golang.org/x/tools/cmd/guru
