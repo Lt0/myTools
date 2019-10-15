@@ -26,7 +26,7 @@ Default access password is lightime
 ## RPC
 If you don't have these client but you are using windows, you can access this remote desktop with windows integrated RPC remote desktop client.
 
-1.Open your windows remote desktop client
+1. Open your windows remote desktop client
 
 2. Input your remote desktop IP to Compute field, defualt should be host IP
 
