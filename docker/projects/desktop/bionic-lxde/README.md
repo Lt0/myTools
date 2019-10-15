@@ -23,8 +23,8 @@ Encription: "Let VNC Server choose"
 
 Default access password is lightime
 
-## RPC
-If you don't have these client but you are using windows, you can access this remote desktop with windows integrated RPC remote desktop client.
+## RPD
+If you don't have these client but you are using windows, you can access this remote desktop with windows integrated RPD remote desktop client.
 
 1. Open your windows remote desktop client
 
