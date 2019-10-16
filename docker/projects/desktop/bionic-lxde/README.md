@@ -36,3 +36,9 @@ If you don't have these client but you are using windows, you can access this re
 
 5. You will see a login pannel which from xrpd now. Session: vnc-any, IP: 127.0.0.1, port: 5901, password: lightime (by default), and then click OK
 
+# Todo
+
+- support encrypt transfer
+- support clipboard share with vnc client
+- support clipboard share with client for web
+
