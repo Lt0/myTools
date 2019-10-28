@@ -18,6 +18,7 @@
     "@theia/json": "next",
     "@theia/textmate-grammars": "next",
     "@theia/mini-browser": "next",
+    "@devpodio/theia-vue-extension": "0.2.1",
     "@theia/go": "next"
   },
   "devDependencies": {
