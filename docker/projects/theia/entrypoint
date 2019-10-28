@@ -1,0 +1,28 @@
+#!/bin/sh
+
+show_help() {
+echo '
+Theia support go/vue/js/json... which based on alpine
+
+Start daemon:
+  docker run -d --name=theia --restart=always -p <Host_Port>:3000 -v <Host_Code_Path>:<Container_Code_Path> -it lightimehpq/theia start
+
+  e.g:
+    docker run -d --name=theia --restart=always -p 3333:3000 -v /vob/go:/root/go -it lightimehpq/theia start
+
+
+Note:
+  1. Default GOPATH: /root/go
+  2. Default GOROOT: /usr/lib/go
+'
+}
+
+
+case $1 in
+	start )
+		yarn theia start --hostname=0.0.0.0
+		;;
+	* )
+		show_help
+		;;
+esac
