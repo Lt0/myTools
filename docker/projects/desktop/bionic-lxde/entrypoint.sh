@@ -6,28 +6,28 @@ CTN=bionic-lxde
 show_help() {
 echo "
 Start desktop:
-  docker run -d --name $CTN -p <vnc-port>:5901 -p <web-vnc-port>:6901 -p <xrpd-port>:3389 -it $IMG start
+  docker run -d --name $CTN --restart=always -p <vnc-port>:5901 -p <web-vnc-port>:6901 -p <xrpd-port>:3389 -it $IMG start
 
   e.g:
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -it $IMG start
 
 
 
 Start desktop and set geometry:
-  docker run -d --name $CTN -p <vnc-port>:5901 -p <web-vnc-port>:6901 -p <xrpd-port>:3389 -e geometry=<WIDTH>x<HEIGHT> -it $IMG start
+  docker run -d --name $CTN --restart=always -p <vnc-port>:5901 -p <web-vnc-port>:6901 -p <xrpd-port>:3389 -e geometry=<WIDTH>x<HEIGHT> -it $IMG start
 
   e.g:
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1920x1080 -it $IMG start
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1600x900 -it $IMG start
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1366x768 -it $IMG start
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1280x1024 -it $IMG start
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1152x864 -it $IMG start
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1024x768 -it $IMG start
-    docker run -d --name $CTN -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=800x600 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1920x1080 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1600x900 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1366x768 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1280x1024 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1152x864 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=1024x768 -it $IMG start
+    docker run -d --name $CTN --restart=always -p 5901:5901 -p 6901:6901 -p 3389:3389 -e geometry=800x600 -it $IMG start
 
 
 Start desktop with customized vnc password:
-  docker run -d --name $CTN -p <vnc-port>:5901 -p <web-vnc-port>:6901 -p <xrpd-port>:3389 -e VNC_PASSWD=<you_password> -it $IMG start
+  docker run -d --name $CTN --restart=always -p <vnc-port>:5901 -p <web-vnc-port>:6901 -p <xrpd-port>:3389 -e VNC_PASSWD=<you_password> -it $IMG start
 
 
 Change vncserver password:
