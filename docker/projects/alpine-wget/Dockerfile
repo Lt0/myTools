@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine as build
 
 ARG VER="1.99.2"
 RUN mkdir /root/wget
@@ -11,5 +11,8 @@ WORKDIR /root/wget/wget2-$VER
 RUN ./configure --disable-dependency-tracking
 RUN make
 RUN make install
+
+FROM alpine
+COPY --from=build /usr/local /usr/local
 RUN ln -sf /usr/local/bin/wget2 /usr/bin/wget
 ENTRYPOINT ["/usr/bin/wget"]
