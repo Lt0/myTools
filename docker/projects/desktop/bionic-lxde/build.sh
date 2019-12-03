@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t bionic-lxde .
+docker build -t lightimehpq/bionic-lxde .

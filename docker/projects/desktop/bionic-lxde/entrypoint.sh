@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMG=bionic-lxde
+IMG=lightimehpq/bionic-lxde
 CTN=bionic-lxde
 
 show_help() {
@@ -52,6 +52,10 @@ $VNC_PASSWD
 
 	echo "$(date) - Start XRDP"
 	xrdp
+
+	echo enable clipboard between client and server
+	export DISPLAY=:1.0
+	vncconfig -nowin &
 
 	bash
 }
