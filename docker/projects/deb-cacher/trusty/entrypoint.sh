@@ -24,7 +24,7 @@ download() {
 	echo Generate offline packages: $*
 	for pkg in $*; do
 		echo Generate $pkg
-		apt install -y -d cloud-init
+		apt install -y -d $pkg
 		mkdir /pkgs/$pkg
 		mv /var/cache/apt/archives/*.deb /pkgs/$pkg/
 	done
