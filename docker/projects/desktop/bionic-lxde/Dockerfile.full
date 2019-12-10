@@ -2,6 +2,6 @@ FROM lightimehpq/bionic-lxde
 
 RUN sed -i s/archive.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list
 RUN sed -i s/security.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list
-RUN apt-get update && apt-get -y install vim openssh-server
+RUN apt-get update && apt-get -y install vim openssh-server iputils-ping libnet-ifconfig-wrapper-perl chromium-browser
 RUN apt-get install -y xbomb
 RUN sed -i 's|IMG=lightimehpq/bionic-lxde|IMG=lightimehpq/bionic-lxde-full|g' /opt/entrypoint.sh
