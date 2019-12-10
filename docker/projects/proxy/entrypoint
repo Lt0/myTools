@@ -1,0 +1,28 @@
+#!/bin/sh
+
+IMG=lightimehpq/proxy
+CTN=proxy
+
+show_help() {
+echo "
+Usage:
+  docker run -d --restart=always --name=$CTN -p <host_port>:1080 $IMG ssserver:port pwd [http]
+
+
+
+Example:
+  start socks proxy on 1080 port:
+    docker run -d --restart=always --name=${CTN}_socks -p 1080:1080 $IMG ssserver:port pwd
+
+  start http proxy on 1081 port:
+    docker run -d --restart=always --name=${CTN}_http -p 1081:1080 $IMG ssserver:port pwd http
+"
+}
+
+SERVER_PORT=$1
+PASSWD=$2
+HTTP=$3
+
+[ $# -eq 2 ] && brook ssclient --listen 0.0.0.0:1080 --ip 0.0.0.0 --server ${SERVER_PORT} --password $PASSWD && exit $?
+[ $# -eq 3 ] && [ "$HTTP" = "http" ] && brook ssclient --listen 0.0.0.0:1080 --ip 0.0.0.0 --server ${SERVER_PORT} --password $PASSWD --http && exit $?
+show_help && exit 1
