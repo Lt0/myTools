@@ -23,7 +23,7 @@ download() {
 	for pkg in $*; do
 		echo Generate $pkg
 		mkdir /pkgs/$pkg
-		yumdownloader --resolve --destdir /pkgs/$pkg httpd
+		yumdownloader --resolve --destdir /pkgs/$pkg $pkg
 	done
 }
 
