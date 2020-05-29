@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -xeo pipefail
+
+do_ddns() {
+. /etc/ddns/namesilo/api.conf
+echo DOMAIN: $DOMAIN
+echo HOST: $HOST
+echo APIKEY: APIKEY
+
+PUB_IP=$(curl -s http://icanhazip.com)
+echo PUB_IP: $PUB_IP
+
+RUN_DIR=/var/run/ddns/namesilo
+IP_FILE=$RUN_DIR/ip
+[ -d "$RUN_DIR" ] || mkdir -p $RUN_DIR
+
+[ -f "$IP_FILE" ] || echo "fake_ip" > $IP_FILE
+PREV_PUB_IP=$(cat $IP_FILE)
+
+# if $PUB_IP equal $PREV_PUB_IP, do nothing and return
+[ "$PUB_IP" = "$PREV_PUB_IP" ] && return
+
+TMP_UPDATE_RESP=/tmp/${DOMAIN}-update.xml
+RECORD_ID=$(curl -s "https://www.namesilo.com/api/dnsListRecords?version=1&type=xml&key=$APIKEY&domain=$DOMAIN" | tail -n1 | sed 's|.*<detail>success</detail><resource_record><record_id>||g' | sed 's|</record_id><type>A</type>.*||g')
+#RECORD_ID=$(xmllint --xpath "//namesilo/reply/resource_record/record_id[../text() = '$DOMAIN' ]" $TMP_DOMAIN_RESP | grep -oP '(?<=<record_id>).*?(?=</record_id>)' | head -n 1)
+curl -s "https://www.namesilo.com/api/dnsUpdateRecord?version=1&type=xml&key=$APIKEY&domain=$DOMAIN&rrid=$RECORD_ID&rrhost=$HOST&rrvalue=$PUB_IP&rrttl=7207" > $TMP_UPDATE_RESP
+RESPONSE_CODE=$(xmllint --xpath "//namesilo/reply/code/text()" $TMP_UPDATE_RESP)
+case $RESPONSE_CODE in
+    300)
+        echo $PUB_IP > $IP_FILE
+        echo Update success. Now $DOMAIN IP address is $PUB_IP;;
+    280)
+        echo $PUB_IP > $IP_FILE
+        echo Duplicate record exist. No update necessary;;
+    *)
+        echo DDNS update failed! code: $RESPONSE_CODE;;
+esac
+}
+
+while true; do
+    do_ddns
+    sleep 60
+done

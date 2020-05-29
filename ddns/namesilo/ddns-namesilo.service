@@ -1,0 +1,12 @@
+Unit]
+Description="amesilo ddns service"
+
+[Service]
+User=root
+ExecStart=/usr/bin/ddns-namesilo
+RemainAfterExit=yes
+Type=idle
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
