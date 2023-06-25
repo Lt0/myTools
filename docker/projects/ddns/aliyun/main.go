@@ -42,8 +42,20 @@ func main() {
 		exernalIPAPI = envExternalIPAPI
 	}
 
+	RR := "@"
+	envRR := os.Getenv("RR")
+	if envRR != "" {
+		RR = envRR
+	}
+
+	resolveType := "A"
+	envResolveType := os.Getenv("RESOLVE_TYPE")
+	if envResolveType != "" {
+		resolveType = envResolveType
+	}
+
 	for {
-		err := updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI)
+		err := updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, RR, resolveType)
 		if err != nil {
 			log.Println("updateDNS err:", err)
 		}
@@ -51,7 +63,7 @@ func main() {
 	}
 }
 
-func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI string) error {
+func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, resolveRecord, resolveType string) error {
 	ip, err := getPublicIP(exernalIPAPI)
 	if err != nil {
 		return fmt.Errorf("getPublicIP err: %w", err)
@@ -70,7 +82,7 @@ func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI string) er
 	log.Printf("current domain name info: %+v\n", result.Body)
 
 	if !hasDefaultRecord(result) {
-		addResult, err := addDefaultRecord(client, domainName, ip)
+		addResult, err := addDefaultRecord(client, domainName, resolveRecord, resolveType, ip)
 		if err != nil {
 			return fmt.Errorf("addDefaultRecord err: %w", err)
 		}
@@ -84,7 +96,7 @@ func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI string) er
 		return nil
 	}
 
-	updateResult, err := updateDefaultRecord(client, *defaultRecord.RecordId, ip)
+	updateResult, err := updateRecord(client, *defaultRecord.RecordId, resolveRecord, resolveType, ip)
 	if err != nil {
 		return fmt.Errorf("update default record err: %w", err)
 	}

@@ -11,6 +11,8 @@ docker run --name aliddns \
 -e DOMAIN_NAME=lt0.fun \
 -e ACCESS_KEY_ID="$ACCESS_KEY_ID" \
 -e ACCESS_KEY_SECRET="$ACCESS_KEY_SECRET" \
+-e RR='*' \
+-e RESOLVE_TYPE="A" \
 -e INTERVAL_MINUTE=2 \
 -e EXTERNAL_IP_API="https://myexternalip.com/raw" \
 -it aliddns

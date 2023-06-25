@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	alidns20150109 "github.com/alibabacloud-go/alidns-20150109/v4/client"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
@@ -52,27 +54,38 @@ func defaultRecord(result *alidns20150109.DescribeDomainRecordsResponse) *alidns
 	return nil
 }
 
-func addDefaultRecord(client *alidns20150109.Client, domainName, ip string) (*alidns20150109.AddDomainRecordResponse, error) {
+// addDefaultRecord
+// recordID: record ID from DescribeDomainRecordsResponse
+// resolveRecord： RR value, e.g. "@", "*"", "www"
+// resolveType: record type, e.g. "A", "CNAME", "TXT"
+// ip: IP address
+func addDefaultRecord(client *alidns20150109.Client, domainName, resolveRecord, resolveType, ip string) (*alidns20150109.AddDomainRecordResponse, error) {
 	req := alidns20150109.AddDomainRecordRequest{
 		Line:       tea.String("default"),
 		DomainName: tea.String(domainName),
-		RR:         tea.String("@"),
-		Type:       tea.String("A"),
+		RR:         tea.String(resolveRecord),
+		Type:       tea.String(resolveType),
 		Value:      tea.String(ip),
 	}
+	fmt.Printf("addDomainRecordRequest: %+v\n", req)
 
 	return client.AddDomainRecord(&req)
 }
 
-func updateDefaultRecord(client *alidns20150109.Client, recordID, ip string) (*alidns20150109.UpdateDomainRecordResponse, error) {
+// updateRecord
+// recordID: record ID from DescribeDomainRecordsResponse
+// resolveRecord： RR value, e.g. "@", "*"", "www"
+// resolveType: record type, e.g. "A", "CNAME", "TXT"
+// ip: IP address
+func updateRecord(client *alidns20150109.Client, recordID, resolveRecord, resolveType, ip string) (*alidns20150109.UpdateDomainRecordResponse, error) {
 	updateDomainRecordRequest := &alidns20150109.UpdateDomainRecordRequest{
 		RecordId: tea.String(recordID),
-		RR:       tea.String("@"),
-		Type:     tea.String("A"),
+		RR:       tea.String(resolveRecord),
+		Type:     tea.String(resolveType),
 		Value:    tea.String(ip),
 	}
 
-	// fmt.Printf("updateDomainRecordRequest: %+v\n", updateDomainRecordRequest)
+	fmt.Printf("updateDomainRecordRequest: %+v\n", updateDomainRecordRequest)
 
 	return client.UpdateDomainRecord(updateDomainRecordRequest)
 }
