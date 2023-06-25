@@ -8,13 +8,13 @@
 
 参数说明
 
-| 参数 | 必选 | 默认值 |
-| - | - | - |
-| DOMAIN_NAME | True | 无 |
-| ACCESS_KEY_ID | True | 无 |
-| ACCESS_KEY_SECRET | True | 无 |
-| INTERVAL_MINUTE | False | 1 |
-| EXTERNAL_IP_API | False | https://api.ipify.org/ |
+| 参数 | 必选 | 默认值 | 说明 |
+| - | - | - | - | 
+| DOMAIN_NAME | True | 无 | 要配置的域名, 例如 lt0.fun
+| ACCESS_KEY_ID | True | 无 | 阿里云的 Access Key ID
+| ACCESS_KEY_SECRET | True | 无 | 阿里云的 Access Key Secret
+| INTERVAL_MINUTE | False | 1 | 检查间隔，单位是分钟
+| EXTERNAL_IP_API | False | https://api.ipify.org/ | 获取外部 IP 的 API
 
 关于直接使用 docker 镜像运行服务参考 start.sh 文件中的示例
 
