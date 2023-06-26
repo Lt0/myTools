@@ -14,9 +14,10 @@
 | ACCESS_KEY_ID | True | 无 | 阿里云的 Access Key ID
 | ACCESS_KEY_SECRET | True | 无 | 阿里云的 Access Key Secret
 | INTERVAL_MINUTE | False | 1 | 检查间隔，单位是分钟
-| EXTERNAL_IP_API | False | https://api.ipify.org/ | 获取外部 IP 的 API
-| RR | False | @ | 主机记录, e.g: "@", "www", "*", "abc.def"
-| RESOLVE_TYPE | False | A | 记录类型, e.g: "A", "CNAME", "AAA", "TXT"...
+| EXTERNAL_IP_API | False | "https://api.ipify.org/" | 获取外部 IP 的 API
+| RR | False | "@" | 主机记录, e.g: "@", "www", "*", "abc.def"
+| RESOLVE_TYPE | False | "A" | 记录类型, e.g: "A", "CNAME", "AAA", "TXT"...
+| LINE | False | "default" | 阿里云 DNS 预定义的解析线路，如默认(default)、联通(unicom)、移动(cmcc)、电信(ctc)、境内教育网(edu)、搜索引擎等等
 
 关于直接使用 docker 镜像运行服务参考 start.sh 文件中的示例
 

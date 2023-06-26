@@ -54,8 +54,14 @@ func main() {
 		resolveType = envResolveType
 	}
 
+	line := "default"
+	envLine := os.Getenv("LINE")
+	if envLine != "" {
+		line = envLine
+	}
+
 	for {
-		err := updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, RR, resolveType)
+		err := updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, RR, resolveType, line)
 		if err != nil {
 			log.Println("updateDNS err:", err)
 		}
@@ -63,7 +69,7 @@ func main() {
 	}
 }
 
-func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, resolveRecord, resolveType string) error {
+func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, resolveRecord, resolveType, line string) error {
 	ip, err := getPublicIP(exernalIPAPI)
 	if err != nil {
 		return fmt.Errorf("getPublicIP err: %w", err)
@@ -81,22 +87,22 @@ func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, resolveRe
 	}
 	log.Printf("current domain name info: %+v\n", result.Body)
 
-	if !hasDefaultRecord(result) {
-		addResult, err := addDefaultRecord(client, domainName, resolveRecord, resolveType, ip)
+	record := getRecord(result, domainName, resolveRecord, resolveType, line)
+	if record == nil {
+		addResult, err := addRecord(client, domainName, resolveRecord, resolveType, ip, line)
 		if err != nil {
-			return fmt.Errorf("addDefaultRecord err: %w", err)
+			return fmt.Errorf("add record err: %w", err)
 		}
-		log.Printf("add default record result: %+v\n", addResult.Body)
+		log.Printf("add record result: %+v\n", addResult.Body)
 		return nil
 	}
 
-	defaultRecord := defaultRecord(result)
-	if *defaultRecord.Value == ip {
-		log.Printf("default record is up to date(%v(record value) == %v(current ip))\n", *defaultRecord.Value, ip)
+	if *record.Value == ip {
+		log.Printf("record is up to date(%v(record value in id %v) == %v(current ip)), skip!\n", *record.Value, *record.RecordId, ip)
 		return nil
 	}
 
-	updateResult, err := updateRecord(client, *defaultRecord.RecordId, resolveRecord, resolveType, ip)
+	updateResult, err := updateRecord(client, *record.RecordId, resolveRecord, resolveType, ip, line)
 	if err != nil {
 		return fmt.Errorf("update default record err: %w", err)
 	}

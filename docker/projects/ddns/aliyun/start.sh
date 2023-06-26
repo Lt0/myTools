@@ -15,6 +15,7 @@ docker run --name aliddns \
 -e RESOLVE_TYPE="A" \
 -e INTERVAL_MINUTE=2 \
 -e EXTERNAL_IP_API="https://myexternalip.com/raw" \
+-e RECORD_NAME="default" \
 -it aliddns
 
 docker logs -f aliddns
