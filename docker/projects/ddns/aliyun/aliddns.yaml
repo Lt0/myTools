@@ -1,0 +1,14 @@
+	access_key_id: xxxxxxxxxxxxxxxx           # required, ali cloud access key id
+	access_key_secret: xxxxxxxxxxxxxxxx       # required, ali cloud access key secret
+	interval_second: 60                       # optional, default 60
+	external_ip_api: "https://api.ipify.org/" # optional, default "https://api.ipify.org/"
+	domains:
+	  - domain:
+	    name: "lt0.fun"                       # required
+	    records:
+	      - type: "A"                         # required, e.g: "A", "CNAME", "AAA", "TXT"...
+	        RR: "@"                           # required, e.g: "@", "www", "*", "abc.def"...
+	        TTL: 600                          # optional, default 600
+	        line: "default"                   # optional, default "default"
+	      - type: "A"           
+	        RR: "*"       

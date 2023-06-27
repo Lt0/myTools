@@ -1,111 +1,102 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 	"time"
 
+	alidns20150109 "github.com/alibabacloud-go/alidns-20150109/v4/client"
 	"github.com/alibabacloud-go/tea/tea"
 )
 
 func main() {
-	domainName := os.Getenv("DOMAIN_NAME")
-	if domainName == "" {
-		panic("DOMAIN_NAME is empty")
+	configPath := flag.String("c", "/etc/aliddns.yaml", fmt.Sprintf("config file path.\nconfig yaml file example:%s\n", configExample))
+	flag.Parse()
+	log.Println("config path:", *configPath)
+	config, err := initConfig(*configPath)
+	if err != nil {
+		log.Fatalln("initConfig err:", err)
 	}
 
-	accessKeyID := os.Getenv("ACCESS_KEY_ID")
-	if accessKeyID == "" {
-		panic("ACCESS_KEY_ID is empty")
+	if err = config.validate(); err != nil {
+		log.Fatalln("config validate err:", err)
 	}
 
-	accessKeySecret := os.Getenv("ACCESS_KEY_SECRET")
-	if accessKeySecret == "" {
-		panic("ACCESS_KEY_SECRET is empty")
-	}
-
-	interval := time.Minute
-	envInterval := os.Getenv("INTERVAL_MINUTE")
-	if envInterval != "" {
-		minutes, err := strconv.ParseInt(envInterval, 10, 64)
-		if err != nil {
-			panic(fmt.Errorf("INTERVAL_MINUTE err: %w", err))
-		}
-		interval = time.Duration(minutes) * time.Minute
-	}
-
-	exernalIPAPI := "https://api.ipify.org/"
-	envExternalIPAPI := os.Getenv("EXTERNAL_IP_API")
-	if envExternalIPAPI != "" {
-		exernalIPAPI = envExternalIPAPI
-	}
-
-	RR := "@"
-	envRR := os.Getenv("RR")
-	if envRR != "" {
-		RR = envRR
-	}
-
-	resolveType := "A"
-	envResolveType := os.Getenv("RESOLVE_TYPE")
-	if envResolveType != "" {
-		resolveType = envResolveType
-	}
-
-	line := "default"
-	envLine := os.Getenv("LINE")
-	if envLine != "" {
-		line = envLine
+	client, err := createClient(tea.String(config.AccessKeyID), tea.String(config.AccessKeySecret))
+	if err != nil {
+		log.Fatalln("createClient err: %w", err)
 	}
 
 	for {
-		err := updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, RR, resolveType, line)
+		ip, err := getPublicIP(config.ExternalIPAPI)
 		if err != nil {
-			log.Println("updateDNS err:", err)
+			log.Printf("get public ip err: %v\n", err)
+			time.Sleep(time.Second * time.Duration(config.IntervalSecond))
+			continue
 		}
-		time.Sleep(interval)
+		log.Println("current public ip:", ip)
+
+		for _, domain := range config.Domains {
+			err := updateDomain(client, ip, domain)
+			if err != nil {
+				log.Printf("updateDomain err: %v\n", err)
+			}
+		}
+
+		time.Sleep(time.Second * time.Duration(config.IntervalSecond))
 	}
 }
 
-func updateDNS(accessKeyID, accessKeySecret, domainName, exernalIPAPI, resolveRecord, resolveType, line string) error {
-	ip, err := getPublicIP(exernalIPAPI)
+func updateDomain(client *alidns20150109.Client, ip string, domain Domain) error {
+	result, err := describeRecords(client, domain.Name)
 	if err != nil {
-		return fmt.Errorf("getPublicIP err: %w", err)
+		return fmt.Errorf("%s: describe records err: %w", domain.Name, err)
 	}
-	log.Println("current public ip:", ip)
+	log.Printf("%s: current domain name info: %+v\n", domain.Name, result.Body)
 
-	client, err := createClient(tea.String(accessKeyID), tea.String(accessKeySecret))
-	if err != nil {
-		return fmt.Errorf("createClient err: %w", err)
-	}
+	for _, record := range domain.Records {
+		currentRecord := getRecordFromDomainRecords(result, domain.Name, record.RR)
 
-	result, err := describeRecords(client, domainName)
-	if err != nil {
-		return fmt.Errorf("describe records err: %w", err)
-	}
-	log.Printf("current domain name info: %+v\n", result.Body)
-
-	record := getRecord(result, domainName, resolveRecord, resolveType, line)
-	if record == nil {
-		addResult, err := addRecord(client, domainName, resolveRecord, resolveType, ip, line)
-		if err != nil {
-			return fmt.Errorf("add record err: %w", err)
+		// add record if current record is nil
+		if currentRecord == nil {
+			addResult, err := addRecord(client, domain.Name, record, ip)
+			if err != nil {
+				return fmt.Errorf("%s: add record err: %w", domain.Name, err)
+			}
+			log.Printf("%s: add record result: %+v\n", domain.Name, addResult.Body)
+			continue
 		}
-		log.Printf("add record result: %+v\n", addResult.Body)
-		return nil
-	}
 
-	if *record.Value == ip {
-		log.Printf("record is up to date(%v(record value in id %v) == %v(current ip)), skip!\n", *record.Value, *record.RecordId, ip)
-		return nil
-	}
+		// skip update if current record value is equal to ip
+		if currentRecord.Value != nil && *currentRecord.Value == ip {
+			log.Printf("%s: record %s value is %s, skip update\n", domain.Name, record.RR, *currentRecord.Value)
+			continue
+		}
 
-	updateResult, err := updateRecord(client, *record.RecordId, resolveRecord, resolveType, ip, line)
-	if err != nil {
-		return fmt.Errorf("update default record err: %w", err)
+		// update record if current record value is not equal to ip
+		updateResult, err := updateRecord(client, *currentRecord.RecordId, record, ip)
+		if err != nil {
+			return fmt.Errorf("update record err: %w", err)
+		}
+		log.Printf("%s: update record result: %+v\n", domain.Name, updateResult.Body)
 	}
-	log.Printf("update default record result: %+v\n", updateResult.Body)
 	return nil
 }
+
+const configExample = `
+	access_key_id: xxxxxxxxxxxxxxxx           	# required, ali cloud access key id
+	access_key_secret: xxxxxxxxxxxxxxxx       	# required, ali cloud access key secret
+	interval_second: 60                       	# optional, default 60
+	external_ip_api: "https://api.ipify.org/" 	# optional, default "https://api.ipify.org/"
+	domains:
+	  - domain:
+	    name: "lt0.fun"         			# required
+	    records:			
+	      - type: "A"           			# required, e.g: "A", "CNAME", "AAA", "TXT"...
+	        RR: "@"             			# required, e.g: "@", "www", "*", "abc.def"...
+	        TTL: 600            			# optional, default 600
+	        line: "default"     			# optional, default "default"
+	      - type: "A"           
+	        RR: "*"             
+`

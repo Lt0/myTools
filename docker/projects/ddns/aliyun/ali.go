@@ -36,73 +36,28 @@ func describeRecords(client *alidns20150109.Client, domainName string) (*alidns2
 	return client.DescribeDomainRecords(&req)
 }
 
-func hasDefaultRecord(result *alidns20150109.DescribeDomainRecordsResponse) bool {
-	for _, record := range result.Body.DomainRecords.Record {
-		if *record.Line == "default" {
-			return true
+func getRecordFromDomainRecords(result *alidns20150109.DescribeDomainRecordsResponse, domainName, RR string) (currentRecord *alidns20150109.DescribeDomainRecordsResponseBodyDomainRecordsRecord) {
+	for _, r := range result.Body.DomainRecords.Record {
+		if r.DomainName == nil || *r.DomainName != domainName {
+			continue
 		}
-	}
-	return false
-}
+		if r.RR == nil || *r.RR != RR {
+			continue
+		}
 
-func defaultRecord(result *alidns20150109.DescribeDomainRecordsResponse) *alidns20150109.DescribeDomainRecordsResponseBodyDomainRecordsRecord {
-	for _, record := range result.Body.DomainRecords.Record {
-		if *record.Line == "default" {
-			return record
-		}
+		return r
 	}
 	return nil
-}
-
-func getRecord(result *alidns20150109.DescribeDomainRecordsResponse, domainName, resolveRecord, resolveType, line string) *alidns20150109.DescribeDomainRecordsResponseBodyDomainRecordsRecord {
-	for _, record := range result.Body.DomainRecords.Record {
-		if record.DomainName == nil || *record.DomainName != domainName {
-			continue
-		}
-		if record.RR == nil || *record.RR != resolveRecord {
-			continue
-		}
-		if record.Type == nil || *record.Type != resolveType {
-			continue
-		}
-		if record.Line == nil || *record.Line != line {
-			continue
-		}
-
-		return record
-	}
-	return nil
-}
-
-// addDefaultRecord
-// domainName: domain name
-// resolveRecord： RR value, e.g. "@", "*"", "www"
-// resolveType: record type, e.g. "A", "CNAME", "TXT"
-// ip: IP address
-func addDefaultRecord(client *alidns20150109.Client, domainName, resolveRecord, resolveType, ip string) (*alidns20150109.AddDomainRecordResponse, error) {
-	req := alidns20150109.AddDomainRecordRequest{
-		Line:       tea.String("default"),
-		DomainName: tea.String(domainName),
-		RR:         tea.String(resolveRecord),
-		Type:       tea.String(resolveType),
-		Value:      tea.String(ip),
-	}
-	fmt.Printf("addDomainRecordRequest: %+v\n", req)
-
-	return client.AddDomainRecord(&req)
 }
 
 // addRecord
 // resolveRecord： RR value, e.g. "@", "*"", "www"
-// resolveType: record type, e.g. "A", "CNAME", "TXT"
-// ip: IP address
-// line: resolve line, e.g. "default", "telecom", "unicom", "mobile", "oversea", "edu", "drpeng", "btvn", "ctt"
-func addRecord(client *alidns20150109.Client, domainName, resolveRecord, resolveType, ip, line string) (*alidns20150109.AddDomainRecordResponse, error) {
+func addRecord(client *alidns20150109.Client, domainName string, record Record, ip string) (*alidns20150109.AddDomainRecordResponse, error) {
 	req := alidns20150109.AddDomainRecordRequest{
-		Line:       tea.String(line),
+		Line:       tea.String(record.Line),
 		DomainName: tea.String(domainName),
-		RR:         tea.String(resolveRecord),
-		Type:       tea.String(resolveType),
+		RR:         tea.String(record.RR),
+		Type:       tea.String(record.Type),
 		Value:      tea.String(ip),
 	}
 	fmt.Printf("addDomainRecordRequest: %+v\n", req)
@@ -112,17 +67,13 @@ func addRecord(client *alidns20150109.Client, domainName, resolveRecord, resolve
 
 // updateRecord
 // recordID: record ID from DescribeDomainRecordsResponse
-// resolveRecord： RR value, e.g. "@", "*"", "www"
-// resolveType: record type, e.g. "A", "CNAME", "TXT"
-// ip: IP address
-// line: resolve line, e.g. "default", "telecom", "unicom", "mobile", "oversea", "edu", "drpeng", "btvn", "ctt"
-func updateRecord(client *alidns20150109.Client, recordID, resolveRecord, resolveType, ip, line string) (*alidns20150109.UpdateDomainRecordResponse, error) {
+func updateRecord(client *alidns20150109.Client, recordID string, record Record, ip string) (*alidns20150109.UpdateDomainRecordResponse, error) {
 	updateDomainRecordRequest := &alidns20150109.UpdateDomainRecordRequest{
 		RecordId: tea.String(recordID),
-		RR:       tea.String(resolveRecord),
-		Type:     tea.String(resolveType),
+		RR:       tea.String(record.RR),
+		Type:     tea.String(record.Type),
+		Line:     tea.String(record.Line),
 		Value:    tea.String(ip),
-		Line:     tea.String(line),
 	}
 
 	fmt.Printf("updateDomainRecordRequest: %+v\n", updateDomainRecordRequest)
