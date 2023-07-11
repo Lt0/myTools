@@ -1,10 +1,13 @@
 package main
 
 import (
+	"crypto/rand"
 	"fmt"
 	"io"
-	"math/rand"
+	"math/big"
+	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -42,8 +45,13 @@ var ipQueryAPIs = []string{
 }
 
 func getRandomAPI() string {
-	rand.Seed(time.Now().Unix())
-	return ipQueryAPIs[rand.Intn(len(ipQueryAPIs))]
+	idx, err := rand.Int(rand.Reader, big.NewInt(int64(len(ipQueryAPIs))))
+	if err != nil {
+		return ipQueryAPIs[len(ipQueryAPIs)-1]
+	}
+
+	// fmt.Printf("Using API: %v: %v\n", idx.Int64(), ipQueryAPIs[idx.Int64()])
+	return ipQueryAPIs[idx.Int64()]
 }
 
 func getPublicIP() (ip string, err error) {
@@ -60,9 +68,13 @@ func getPublicIP() (ip string, err error) {
 			ipBytes, err := io.ReadAll(resp.Body)
 			if err != nil {
 				fmt.Printf("Error reading response body from %s: %v\n", api, err)
+				time.Sleep(time.Second) // sleep 1s to avoid get the same API if failed very fast
 				continue
 			}
-			ip = string(ipBytes)
+			ip = strings.TrimSpace(string(ipBytes))
+			if !isValidIP(ip) {
+				continue
+			}
 			break
 		}
 	}
@@ -72,4 +84,8 @@ func getPublicIP() (ip string, err error) {
 	}
 
 	return ip, nil
+}
+
+func isValidIP(ip string) bool {
+	return net.ParseIP(ip) != nil
 }
