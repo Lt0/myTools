@@ -12,7 +12,6 @@ type Configuration struct {
 	AccessKeyID     string   `yaml:"access_key_id"`
 	AccessKeySecret string   `yaml:"access_key_secret"`
 	IntervalSecond  int      `yaml:"interval_second"`
-	ExternalIPAPI   string   `yaml:"external_ip_api"`
 	Domains         []Domain `yaml:"domains"`
 }
 
@@ -46,9 +45,6 @@ func initConfig(confPath string) (*Configuration, error) {
 	if config.IntervalSecond == 0 {
 		config.IntervalSecond = 60
 	}
-	if config.ExternalIPAPI == "" {
-		config.ExternalIPAPI = "https://api.ipify.org"
-	}
 
 	for _, domain := range config.Domains {
 		for _, record := range domain.Records {
@@ -72,9 +68,6 @@ func (c *Configuration) validate() error {
 	}
 	if c.IntervalSecond <= 0 {
 		return fmt.Errorf("interval_second must be greater than 0")
-	}
-	if c.ExternalIPAPI == "" {
-		return fmt.Errorf("external_ip_api is required")
 	}
 	if len(c.Domains) == 0 {
 		return fmt.Errorf("domains is required")

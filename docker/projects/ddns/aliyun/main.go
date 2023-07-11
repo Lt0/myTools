@@ -29,7 +29,7 @@ func main() {
 	}
 
 	for {
-		ip, err := getPublicIP(config.ExternalIPAPI)
+		ip, err := getPublicIP()
 		if err != nil {
 			log.Printf("get public ip err: %v\n", err)
 			time.Sleep(time.Second * time.Duration(config.IntervalSecond))
@@ -88,7 +88,6 @@ const configExample = `
 	access_key_id: xxxxxxxxxxxxxxxx           	# required, ali cloud access key id
 	access_key_secret: xxxxxxxxxxxxxxxx       	# required, ali cloud access key secret
 	interval_second: 60                       	# optional, default 60
-	external_ip_api: "https://api.ipify.org/" 	# optional, default "https://api.ipify.org/"
 	domains:
 	  - domain:
 	    name: "lt0.fun"         			# required
