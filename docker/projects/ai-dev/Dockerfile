@@ -19,7 +19,7 @@ ENV GOROOT=/opt/go PATH=$PATH:/opt/go/bin
 RUN curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf > /install-rustup.sh && chmod a+x /install-rustup.sh && /install-rustup.sh -y
 
 # Langchain
-RUN pip install langchain
+RUN pip install -qU langchain langchain-cli langserve[all]
 RUN pip install -qU langchain-openai langchain-community langchain-ollama langchain-chroma
 # Langchain unstructured pdf loader
 RUN apt-get install -y libgl1 libglib2.0-0 tesseract-ocr libtesseract-dev poppler-utils poppler-utils
