@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"io"
 	"math/big"
@@ -29,34 +30,46 @@ import (
 
 const maxRetries = 10
 
-var ipQueryAPIs = []string{
-	"https://api.ipify.org",
-	"https://api64.ipify.org",
-	"https://ipify2.opencnam.com",
-	"https://ifconfig.me/ip",
-	"https://ifconfig.co/ip",
-	"https://icanhazip.com",
-	"https://ipinfo.io/ip",
-	"https://api.ip.sb/ip",
-	"https://checkip.amazonaws.com",
-	"https://www.trackip.net/ip",
-	"https://myexternalip.com/raw",
-	"https://ip.seeip.org",
-}
+var ipQueryAPIs = []string{}
 
-func getRandomAPI() string {
-	idx, err := rand.Int(rand.Reader, big.NewInt(int64(len(ipQueryAPIs))))
+func getRandomAPI(ipType string) (string, error) {
+	ipv4APIs := []string{
+		"https://api.ipify.org?format=text",
+		"https://ipv4.icanhazip.com",
+		"https://checkip.amazonaws.com",
+	}
+
+	ipv6APIs := []string{
+		"https://api6.ipify.org?format=text",
+		"https://ipv6.icanhazip.com",
+		"https://checkipv6.dyndns.com",
+	}
+
+	var apis []string
+	switch ipType {
+	case "ipv4":
+		apis = ipv4APIs
+	case "ipv6":
+		apis = ipv6APIs
+	default:
+		return "", errors.New("invalid ipType: must be 'ipv4' or 'ipv6'")
+	}
+
+	idx, err := rand.Int(rand.Reader, big.NewInt(int64(len(apis))))
 	if err != nil {
-		return ipQueryAPIs[len(ipQueryAPIs)-1]
+		return apis[0], nil
 	}
 
 	// fmt.Printf("Using API: %v: %v\n", idx.Int64(), ipQueryAPIs[idx.Int64()])
-	return ipQueryAPIs[idx.Int64()]
+	return apis[idx.Int64()], nil
 }
 
-func getPublicIP() (ip string, err error) {
+func getPublicIP(ipType string) (ip string, err error) {
 	for i := 0; i < maxRetries; i++ {
-		api := getRandomAPI()
+		api, err := getRandomAPI(ipType)
+		if err != nil {
+			return "", fmt.Errorf("Error getting random API: %v", err)
+		}
 		resp, err := http.Get(api)
 		if err != nil {
 			fmt.Printf("Error making request to %s: %v\n", api, err)

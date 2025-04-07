@@ -28,17 +28,41 @@ func main() {
 		log.Fatalln("createClient err: %w", err)
 	}
 
-	for {
-		ip, err := getPublicIP()
-		if err != nil {
-			log.Printf("get public ip err: %v\n", err)
-			time.Sleep(time.Second * time.Duration(config.IntervalSecond))
-			continue
+	hasRecordA := false
+	hasRecordAAAA := false
+	for _, domain := range config.Domains {
+		for _, record := range domain.Records {
+			if record.Type == "A" {
+				hasRecordA = true
+			} else if record.Type == "AAAA" {
+				hasRecordAAAA = true
+			}
 		}
-		log.Println("current public ip:", ip)
+	}
+
+	for {
+		ipv4 := ""
+		ipv6 := ""
+		if hasRecordA {
+			ipv4, err = getPublicIP("ipv4")
+			if err != nil {
+				log.Printf("get public ip err: %v\n", err)
+				time.Sleep(time.Second * time.Duration(config.IntervalSecond))
+				continue
+			}
+		}
+		if hasRecordAAAA {
+			ipv6, err = getPublicIP("ipv6")
+			if err != nil {
+				log.Printf("get public ip err: %v\n", err)
+				time.Sleep(time.Second * time.Duration(config.IntervalSecond))
+				continue
+			}
+		}
+		log.Printf("current public ip4: %v, ipv6: %v\n", ipv4, ipv6)
 
 		for _, domain := range config.Domains {
-			err := updateDomain(client, ip, domain)
+			err := updateDomain(client, ipv4, ipv6, domain)
 			if err != nil {
 				log.Printf("updateDomain err: %v\n", err)
 			}
@@ -48,7 +72,7 @@ func main() {
 	}
 }
 
-func updateDomain(client *alidns20150109.Client, ip string, domain Domain) error {
+func updateDomain(client *alidns20150109.Client, ipv4, ipv6 string, domain Domain) error {
 	result, err := describeRecords(client, domain.Name)
 	if err != nil {
 		return fmt.Errorf("%s: describe records err: %w", domain.Name, err)
@@ -56,6 +80,11 @@ func updateDomain(client *alidns20150109.Client, ip string, domain Domain) error
 	log.Printf("%s: current domain name info: %+v\n", domain.Name, result.Body)
 
 	for _, record := range domain.Records {
+		ip := ipv4
+		if record.Type == "AAAA" {
+			ip = ipv6
+		}
+
 		currentRecord := getRecordFromDomainRecords(result, domain.Name, record.RR)
 
 		// add record if current record is nil
@@ -92,7 +121,7 @@ const configExample = `
 	  - domain:
 	    name: "lt0.fun"         			# required
 	    records:			
-	      - type: "A"           			# required, e.g: "A", "CNAME", "AAA", "TXT"...
+	      - type: "A"           			# required, e.g: "A", "CNAME", "AAAA", "TXT"...
 	        RR: "@"             			# required, e.g: "@", "www", "*", "abc.def"...
 	        TTL: 600            			# optional, default 600
 	        line: "default"     			# optional, default "default"
